@@ -1,0 +1,10 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.nixuge.epiczoomer.mixins",
+  "refmap": "refmap.epiczoomer.json",
+  "mixins": [],
+  "client": [
+    "EntityRendererMixin"
+  ],
+  "server": []
+}
