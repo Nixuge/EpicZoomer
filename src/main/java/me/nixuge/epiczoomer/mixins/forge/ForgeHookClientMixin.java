@@ -1,7 +1,7 @@
 package me.nixuge.epiczoomer.mixins.forge;
 
 import me.nixuge.epiczoomer.manager.ForgeHookClientProperties;
-import me.nixuge.epiczoomer.manager.ZoomProperties;
+import me.nixuge.epiczoomer.manager.ZoomHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
@@ -25,7 +25,7 @@ public class ForgeHookClientMixin {
     @Overwrite
     public static float getFOVModifier(EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, float fov) {
         if (ForgeHookClientProperties.isShouldChangeFov()) {
-            fov = ZoomProperties.runZoomLogic(fov);
+            fov = ZoomHandler.runZoomLogic(fov);
             ForgeHookClientProperties.setShouldChangeFov(false);
         }
         EntityViewRenderEvent.FOVModifier event = new EntityViewRenderEvent.FOVModifier(renderer, entity, block, renderPartialTicks, fov);
