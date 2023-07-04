@@ -1,6 +1,7 @@
 package me.nixuge.epiczoomer.manager;
 
 import me.nixuge.epiczoomer.keybinds.Keybinds;
+import me.nixuge.epiczoomer.manager.obj.ZoomObject;
 import net.minecraft.client.Minecraft;
 
 public class ZoomHandler {
@@ -23,20 +24,15 @@ public class ZoomHandler {
                 // lastMillis = System.currentTimeMillis();
                 ZoomProperties.enableZoom();
                 mc.renderGlobal.setDisplayListEntitiesDirty();
-            } else if (ZoomProperties.isZoomGotUpdate()) {
-                mc.renderGlobal.setDisplayListEntitiesDirty();
-            } 
-            // else {
-                // fov = setFov(fov) * getModifier(true);
-                // mc.renderGlobal.setDisplayListEntitiesDirty();
-            // }
+            }
         } else if (ZoomProperties.isZooming()){
             mc.renderGlobal.setDisplayListEntitiesDirty();
             ZoomProperties.disableZoom();
         }
-        mc.renderGlobal.setDisplayListEntitiesDirty();
+        
 
-        updateZoomProgress(false);
+        if (updateZoomProgress(false))
+            mc.renderGlobal.setDisplayListEntitiesDirty();
 
         return calculateFov(fov);
     }
@@ -51,33 +47,62 @@ public class ZoomHandler {
     // Will revisit once I have the chance to. For now, going onto another branch & in beta.
     
     // private static long lastMillis = System.currentTimeMillis();
-    public static void updateZoomProgress(boolean zooming) {
+    /**
+     * @param zooming
+     * @return true if the zoom % got updated, false otherwise.
+     */
+    public static boolean updateZoomProgress(boolean zooming) {
         // float t = 1F;
         // long time = System.currentTimeMillis();
-        // long timeSinceLastChange = time - lastMillis;
+        // double timeSinceAnimationStart = time - ZoomProperties.getZoomChangeStartTime();
 
-        int target = ZoomProperties.getZoomTarget();
-        int current = ZoomProperties.getZoomPercent();
-        if (target == 1 && current == 1)
-            return;
-        
-        int difference = Math.abs(target - current);
-        if (Math.abs(target - current) == 1)
-            return;
-        
-        int valueChange = 1;
-        if (difference > 1000) {
-            valueChange = 7;
-        } else if (difference > 400) {
-            valueChange = 4;
-        } else if (difference > 200) {
-            valueChange = 2;
+        ZoomObject zoomObject = ZoomProperties.getZoomObject();
+    
+        if (zoomObject == null) {
+            return false;
+        }
+        if (zoomObject.hasAnimationEnded()) {
+            if (zoomObject.getTargetZoomPercent() == 1)
+                ZoomProperties.destroyZoomObject();
+            return false;
         }
 
+        double prog = zoomObject.getPercentageToSet();
+        ZoomProperties.setZoomPercent(prog);
+        // if (prog > 0.1 && prog < 1.9)
+        //     System.out.println(prog);
+        // timeSinceAnimationStart /= 10; // Normalize to 100
+        // timeSinceAnimationStart /= 50; // Normalize to 2
+
+        // System.out.println(timeSinceAnimationStart + " vs " + Math.tanh(timeSinceAnimationStart));
+
+        // int target = ZoomProperties.getZoomTarget();
+        // double current = ZoomProperties.getZoomPercent();
+        // if (target == 1 && current == 1)
+        //     return false;
+        
+        // double animPercent = Math.tanh(timeSinceAnimationStart * .2) + 1;
+        // System.out.println(animPercent);
+
+        // double difference = Math.abs(target - current);
+        // if (Math.abs(target - current) < 1)
+        //     return false;
+        
+        // int valueChange = 1;
+        // if (difference > 1000) {
+        //     valueChange = 7;
+        // } else if (difference > 400) {
+        //     valueChange = 4;
+        // } else if (difference > 200) {
+        //     valueChange = 2;
+        // }
+
         // System.out.println("current: " + current + " target:" + target);
-        if (target > current)
-            ZoomProperties.setZoomPercent(current + valueChange);
-        else
-            ZoomProperties.setZoomPercent(current - valueChange);        
+        // if (target > current)
+        //     ZoomProperties.setZoomPercent(current + Math.tanh(timeSinceAnimationStart));
+        // else
+        //     ZoomProperties.setZoomPercent(current - Math.tanh(timeSinceAnimationStart));    
+        
+        return true;    
     }
 }
