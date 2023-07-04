@@ -1,4 +1,4 @@
-package me.nixuge.epiczoomer.manager;
+package me.nixuge.epiczoomer.zoom.properties;
 
 import lombok.Getter;
 import lombok.Setter;

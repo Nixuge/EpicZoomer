@@ -1,8 +1,8 @@
-package me.nixuge.epiczoomer.manager;
+package me.nixuge.epiczoomer.zoom.properties;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.nixuge.epiczoomer.manager.obj.ZoomObject;
+import me.nixuge.epiczoomer.zoom.ZoomObject;
 
 public class ZoomProperties {
     // Actual zoom
@@ -15,10 +15,6 @@ public class ZoomProperties {
     // If is currently zooming or not
     @Getter
     private static boolean isZooming = false;
-    // If zoom has got an update or not
-    @Getter
-    @Setter
-    private static boolean zoomGotUpdate = false;
 
 
     public static void enableZoom() {
@@ -29,22 +25,21 @@ public class ZoomProperties {
     public static void disableZoom() {
         zoomObject.updateTargetPercent(1);
         isZooming = false;
-        zoomGotUpdate = false;
     }
-    public static void add25() {
-        zoomGotUpdate = true;
+    public static void scrollUp() {
+        // Todo: custom values
         zoomObject.updateTargetPercent(zoomObject.getTargetZoomPercent() + 25);
     }
-    public static void remove25() {
-        zoomGotUpdate = true;
-        // todo: move that over to the object
+    public static void scrollDown() {
+        // Todo: custom values
         if (zoomObject.getTargetZoomPercent() > 25)
+            // todo: move that over to the object
             zoomObject.updateTargetPercent(zoomObject.getTargetZoomPercent() - 25);
     }
 
     public static void destroyZoomObject() {
         // Not sure if this is actually useful tbh
-        // but yeah might as well not have a dangling zoom object
+        // but yeah might as well not have a dangling zoom object for useless checks
         zoomObject = null;
     }
 }

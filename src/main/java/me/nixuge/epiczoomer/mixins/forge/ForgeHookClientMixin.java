@@ -1,7 +1,7 @@
 package me.nixuge.epiczoomer.mixins.forge;
 
-import me.nixuge.epiczoomer.manager.ForgeHookClientProperties;
-import me.nixuge.epiczoomer.manager.ZoomHandler;
+import me.nixuge.epiczoomer.zoom.ZoomHandler;
+import me.nixuge.epiczoomer.zoom.properties.ForgeHookClientProperties;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;

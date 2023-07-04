@@ -1,7 +1,7 @@
-package me.nixuge.epiczoomer.manager;
+package me.nixuge.epiczoomer.zoom;
 
 import me.nixuge.epiczoomer.keybinds.Keybinds;
-import me.nixuge.epiczoomer.manager.obj.ZoomObject;
+import me.nixuge.epiczoomer.zoom.properties.ZoomProperties;
 import net.minecraft.client.Minecraft;
 
 public class ZoomHandler {

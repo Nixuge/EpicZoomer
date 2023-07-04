@@ -1,11 +1,12 @@
 package me.nixuge.epiczoomer.mixins.render;
 
-import me.nixuge.epiczoomer.manager.ForgeHookClientProperties;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import me.nixuge.epiczoomer.zoom.properties.ForgeHookClientProperties;
 
 @Mixin(EntityRenderer.class)
 public class EntityRendererMixin {
@@ -16,7 +17,7 @@ public class EntityRendererMixin {
     //    anything else useful here lmfao
 
     @Inject(method = "getFOVModifier", at = @At("HEAD"))
-    public void owo(float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Float> cir) {
+    public void getFOVModifier(float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Float> cir) {
         ForgeHookClientProperties.setShouldChangeFov(true);
     }
 }
