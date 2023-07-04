@@ -27,7 +27,7 @@ public class ZoomObject {
     private static float TANH_ENDING_VALUE = TANH_STARTING_VALUE_OFFSET + 2;
 
     //TODO: replace this by config value
-    private static int ANIMATION_TIME_FOR_100_PERCENT = 1000; //ms
+    private static int ANIMATION_TIME_FOR_100_PERCENT = 300; //ms
 
     private double startPercent;
 
@@ -41,7 +41,6 @@ public class ZoomObject {
     
     // To be called on init/% change
     public ZoomObject(int startPercent, int targetPercent) {
-        ANIMATION_TIME_FOR_100_PERCENT = 200;
         this.startTime = System.currentTimeMillis();
         this.startPercent = startPercent;
         this.zoomPercentDifferenceStartFinish = 99;
