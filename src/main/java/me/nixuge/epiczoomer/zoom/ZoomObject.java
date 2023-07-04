@@ -19,11 +19,11 @@ public class ZoomObject {
     //// Note about that one:
     //// Technically the function doesn't start curving at -2, in fact at -2 it's still clearly not flat.
     //// However, every value above 2 (except maybe up to 2.5?) feels way too slow of a start. It's just horrible to use.
-    //// 2 on the other hand is almost perfect, except with HIGH animation times it tends to sometimes (rarely) "bump" a bit at the start
+    //// 2 on the other hand is almost perfect, except with HIGH animation times it tends to sometimes "bump" a bit at the start/end
     //// Still, keeping it like that for the time being (and prolly forever)
     // the +1 being to bring it out of negatives (by default outputs -1 to 1, with this 0 to 2)
     // the /2 being to bring it between 0 and 1 (as we saw before our output was between 0 and 2, so divide by 2)
-    private static float TANH_STARTING_VALUE_OFFSET = 2;
+    private static float TANH_STARTING_VALUE_OFFSET = 2f;
     private static float TANH_ENDING_VALUE = TANH_STARTING_VALUE_OFFSET + 2;
 
     //TODO: replace this by config value
@@ -93,7 +93,7 @@ public class ZoomObject {
         // but the first condition already filters out most calls to it.
         // This is due to animationTime being a bit inaccurate, as I assume that
         // thanh(2) == 1, while in fact it's more like tanh(2) == 0.964
-        return getAnimationTimeProgress() > this.animationTime && Math.abs(this.targetZoomPercent - getPercentageToSet()) < .01;
+        return getAnimationTimeProgress() > this.animationTime && Math.abs(this.targetZoomPercent - getPercentageToSet()) < 0.1;
     }
 
     public long getAnimationTimeProgress() {
@@ -107,7 +107,9 @@ public class ZoomObject {
     }
 
     public double getPercentageToSet() {
-        System.out.println(getCurrentProgressPercent());
-        return startPercent + (getCurrentProgressPercent() * zoomPercentDifferenceStartFinish); 
+        double percentage = startPercent + (getCurrentProgressPercent() * zoomPercentDifferenceStartFinish);
+        if (percentage < 2) // Mitigate last bump (disable to see its effect)
+            return 1;
+        return percentage; 
     }
 }

@@ -31,78 +31,35 @@ public class ZoomHandler {
         }
         
 
-        if (updateZoomProgress(false))
-            mc.renderGlobal.setDisplayListEntitiesDirty();
+        ZoomObject zoomObject = ZoomProperties.getZoomObject();
 
-        return calculateFov(fov);
+        if (zoomObject == null)
+            return fov;
+
+        if (updateZoomProgress(zoomObject)) 
+            mc.renderGlobal.setDisplayListEntitiesDirty();
+            
+        return calculateZoomFov(fov);
     }
 
-    public static float calculateFov(float fov) {
+    public static float calculateZoomFov(float fov) {
         return fov / (float)(Math.exp(ZOOM_MULTIPLICATOR * ZoomProperties.getZoomPercent()));
     }
 
-    // Note:
-    // This is MORE than suboptimal.
-    // In addition to being linear and not a very nice bezier, it's also tied to the framerate.
-    // Will revisit once I have the chance to. For now, going onto another branch & in beta.
-    
-    // private static long lastMillis = System.currentTimeMillis();
     /**
-     * @param zooming
      * @return true if the zoom % got updated, false otherwise.
      */
-    public static boolean updateZoomProgress(boolean zooming) {
-        // float t = 1F;
-        // long time = System.currentTimeMillis();
-        // double timeSinceAnimationStart = time - ZoomProperties.getZoomChangeStartTime();
-
-        ZoomObject zoomObject = ZoomProperties.getZoomObject();
-    
-        if (zoomObject == null) {
-            return false;
-        }
+    public static boolean updateZoomProgress(ZoomObject zoomObject) {
         if (zoomObject.hasAnimationEnded()) {
-            if (zoomObject.getTargetZoomPercent() == 1)
+            if (zoomObject.getTargetZoomPercent() == 1) {
+                ZoomProperties.setZoomPercent(zoomObject.getTargetZoomPercent()); //Just in case, to avoid float inaccuracies
                 ZoomProperties.destroyZoomObject();
+            }
+                
             return false;
         }
 
-        double prog = zoomObject.getPercentageToSet();
-        ZoomProperties.setZoomPercent(prog);
-        // if (prog > 0.1 && prog < 1.9)
-        //     System.out.println(prog);
-        // timeSinceAnimationStart /= 10; // Normalize to 100
-        // timeSinceAnimationStart /= 50; // Normalize to 2
-
-        // System.out.println(timeSinceAnimationStart + " vs " + Math.tanh(timeSinceAnimationStart));
-
-        // int target = ZoomProperties.getZoomTarget();
-        // double current = ZoomProperties.getZoomPercent();
-        // if (target == 1 && current == 1)
-        //     return false;
-        
-        // double animPercent = Math.tanh(timeSinceAnimationStart * .2) + 1;
-        // System.out.println(animPercent);
-
-        // double difference = Math.abs(target - current);
-        // if (Math.abs(target - current) < 1)
-        //     return false;
-        
-        // int valueChange = 1;
-        // if (difference > 1000) {
-        //     valueChange = 7;
-        // } else if (difference > 400) {
-        //     valueChange = 4;
-        // } else if (difference > 200) {
-        //     valueChange = 2;
-        // }
-
-        // System.out.println("current: " + current + " target:" + target);
-        // if (target > current)
-        //     ZoomProperties.setZoomPercent(current + Math.tanh(timeSinceAnimationStart));
-        // else
-        //     ZoomProperties.setZoomPercent(current - Math.tanh(timeSinceAnimationStart));    
-        
+        ZoomProperties.setZoomPercent(zoomObject.getPercentageToSet());
         return true;    
     }
 }
