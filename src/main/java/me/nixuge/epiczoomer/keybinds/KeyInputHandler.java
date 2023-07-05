@@ -1,6 +1,6 @@
 package me.nixuge.epiczoomer.keybinds;
 
-import me.nixuge.epiczoomer.manager.ZoomProperties;
+import me.nixuge.epiczoomer.zoom.properties.ZoomProperties;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -10,10 +10,9 @@ public class KeyInputHandler {
     public void onKeyInput(MouseEvent event) {
         if (!ZoomProperties.isZooming() || event.dwheel == 0)
             return;
-        ZoomProperties.setZoomGotUpdate(true);
         if (event.dwheel < 0)
-            ZoomProperties.remove25();
+            ZoomProperties.scrollDown();
         else
-            ZoomProperties.add25();
+            ZoomProperties.scrollUp();
     }
 }
