@@ -35,6 +35,8 @@ public class ZoomObject {
     private double zoomPercentDifferenceStartFinish;
     
     private float animationTime;
+
+    private boolean instaZoom = false;
     
     // To be called on init/% change
     public ZoomObject(int startPercent, int targetPercent) {
@@ -43,6 +45,8 @@ public class ZoomObject {
         this.zoomPercentDifferenceStartFinish = 99;
         this.targetZoomPercent = targetPercent;
         this.animationTime = getAnimationTotalTime(99);
+
+        this.instaZoom = this.animationTime < 15 || configCache.getMsForHundredPercentZoom() < 15;
     }
 
     public void updateTargetPercent(int newTargetPercent) {
@@ -53,19 +57,25 @@ public class ZoomObject {
 
         this.animationTime = getAnimationTotalTime(Math.abs(zoomPercentDifferenceStartFinish));
         this.targetZoomPercent = newTargetPercent;
+
+        this.instaZoom = this.animationTime < 15;
     }
 
     private float getAnimationTotalTime(double percentChange) {
         // This adapts how much you zoom by the speed,
         // Eg. if you zoom 100x%, you'll have the same zoom speed as if you zoomed 25%
+        int msHundred = configCache.getMsForHundredPercentZoom();
+        if (msHundred < 16) // Buggy under 15
+            msHundred = 15;
+        
         if (configCache.isAdaptativeZoomTime()) {
-            int animTime = (int)((percentChange / 100.0) * configCache.getMsForHundredPercentZoom());
+            int animTime = (int)((percentChange / 100.0) * msHundred);
             if (animTime > configCache.getMaxZoomTime())
                 return configCache.getMaxZoomTime();
             return animTime;
         }
         // This does not if you have the option disabled
-        return configCache.getMsForHundredPercentZoom();
+        return msHundred;
     }
 
     // private void printDebugInfo() {
@@ -100,6 +110,9 @@ public class ZoomObject {
     }
 
     public double getPercentageToSet() {
+        if (this.instaZoom) 
+            return targetZoomPercent;
+        
         double percentage = startPercent + (getCurrentProgressPercent() * zoomPercentDifferenceStartFinish);
         if (percentage < 2) // Mitigate last bump (disable to see its effect)
             return 1;
