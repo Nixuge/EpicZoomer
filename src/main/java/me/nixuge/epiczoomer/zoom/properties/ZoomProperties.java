@@ -2,7 +2,9 @@ package me.nixuge.epiczoomer.zoom.properties;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.nixuge.epiczoomer.config.ConfigCache;
 import me.nixuge.epiczoomer.zoom.ZoomObject;
+import net.minecraft.client.Minecraft;
 
 public class ZoomProperties {
     // Actual zoom
@@ -20,11 +22,17 @@ public class ZoomProperties {
     public static void enableZoom() {
         zoomObject = new ZoomObject(1, 100);
         isZooming = true;
+
+        if (zoomObject.isSmoothCameraEnabled())
+            Minecraft.getMinecraft().gameSettings.smoothCamera = true;
     }
 
     public static void disableZoom() {
         zoomObject.updateTargetPercent(1);
         isZooming = false;
+
+        if (zoomObject.isSmoothCameraEnabled())
+            Minecraft.getMinecraft().gameSettings.smoothCamera = false;
     }
     public static void scrollUp() {
         // Todo: custom values
