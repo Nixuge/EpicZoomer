@@ -7,9 +7,16 @@ import me.nixuge.epiczoomer.config.ConfigCache;
 public class ZoomObject {
     // Vars
     
+    // Note: this function needs to be redone,
+    // with a toggle to either allow:
+    // Full tanh, slow-fast-slow
+    // Half tanh, fast-slow
+    // also need to get a proper formula and not a yoloed one
+    // (current one is almost good if adding .018x, but meh)
+
     // Why those vars?
     // The function I'm using to calculate the animation is:
-    // (tanh(x * z - w) + 1) / 2
+    // (tanh(x * z - w) + 1) / 2 
     // with:
     // x being the current animation percent (0-1)
     // z being TANH_ENDING_VALUE, basically an offset to make sure the result ends up between 0 and 1. Equals to "w + 2(.5 to avoid bump at end)"
@@ -37,6 +44,8 @@ public class ZoomObject {
     private float animationTime;
 
     private boolean instaZoom = false;
+
+    @Getter private final boolean isSmoothCamera;
     
     // To be called on init/% change
     public ZoomObject(int startPercent, int targetPercent) {
@@ -47,6 +56,8 @@ public class ZoomObject {
         this.animationTime = getAnimationTotalTime(99);
 
         this.instaZoom = this.animationTime < 15 || configCache.getMsForHundredPercentZoom() < 15;
+
+        this.isSmoothCamera = configCache.isSmoothCamera();
     }
 
     public void updateTargetPercent(int newTargetPercent) {
@@ -117,9 +128,5 @@ public class ZoomObject {
         if (percentage < 2) // Mitigate last bump (disable to see its effect)
             return 1;
         return percentage; 
-    }
-
-    public boolean isSmoothCameraEnabled() {
-        return configCache.isSmoothCamera();
     }
 }

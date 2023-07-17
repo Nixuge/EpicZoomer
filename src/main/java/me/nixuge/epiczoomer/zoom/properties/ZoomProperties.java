@@ -2,7 +2,6 @@ package me.nixuge.epiczoomer.zoom.properties;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.nixuge.epiczoomer.config.ConfigCache;
 import me.nixuge.epiczoomer.zoom.ZoomObject;
 import net.minecraft.client.Minecraft;
 
@@ -23,7 +22,7 @@ public class ZoomProperties {
         zoomObject = new ZoomObject(1, 100);
         isZooming = true;
 
-        if (zoomObject.isSmoothCameraEnabled())
+        if (zoomObject.isSmoothCamera())
             Minecraft.getMinecraft().gameSettings.smoothCamera = true;
     }
 
@@ -31,7 +30,7 @@ public class ZoomProperties {
         zoomObject.updateTargetPercent(1);
         isZooming = false;
 
-        if (zoomObject.isSmoothCameraEnabled())
+        if (zoomObject.isSmoothCamera())
             Minecraft.getMinecraft().gameSettings.smoothCamera = false;
     }
     public static void scrollUp() {
