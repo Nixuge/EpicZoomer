@@ -48,7 +48,7 @@ public class ConfigCache {
         this.smoothCamera = configuration.getBoolean(
                 "Smooth camera",
                 "General",
-                true,
+                false,
                 "If set to true, smooth camera will be automatically enabled when zooming"
         );
     }
