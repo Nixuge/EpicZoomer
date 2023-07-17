@@ -13,6 +13,7 @@ public class ConfigCache {
     private boolean adaptativeZoomTime;
     private int maxZoomTime;
     private int msForHundredPercentZoom;
+    private boolean smoothCamera;
 
     public ConfigCache(final Configuration configuration) {
         this.configuration = configuration;
@@ -41,9 +42,15 @@ public class ConfigCache {
                 200,
                 0,
                 5000,
-                "Self explanatory. If \"adaptative zom time\" set to false, this will be the fixed time for every zoom animation."
+                "Self explanatory. If \"adaptative zoom time\" set to false, this will be the fixed time for every zoom animation."
         );
 
+        this.smoothCamera = configuration.getBoolean(
+                "Smooth camera",
+                "General",
+                true,
+                "If set to true, smooth camera will be automatically enabled when zooming"
+        );
     }
 
     @SubscribeEvent

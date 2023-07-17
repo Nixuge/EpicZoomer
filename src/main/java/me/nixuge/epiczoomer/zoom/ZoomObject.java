@@ -118,4 +118,8 @@ public class ZoomObject {
             return 1;
         return percentage; 
     }
+
+    public boolean isSmoothCameraEnabled() {
+        return configCache.isSmoothCamera();
+    }
 }
