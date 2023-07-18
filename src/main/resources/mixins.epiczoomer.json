@@ -5,7 +5,8 @@
   "mixins": [],
   "client": [
     "forge.ForgeHookClientMixin",
-    "render.EntityRendererMixin"
+    "render.EntityRendererMixin",
+    "MinecraftMixin"
   ],
   "server": []
 }
